@@ -60,7 +60,26 @@ services:
       - "/etc/timezone:/etc/timezone:ro"
       - "/etc/localtime:/etc/localtime:ro"
 
+  postgres:
+    image: postgres:14
+    hostname: postgres
+    container_name: postgres
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+    networks:
+      - proxynet
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - "/etc/timezone:/etc/timezone:ro"
+      - "/etc/localtime:/etc/localtime:ro"
+
   connect:
+    build:
+      context: ./custom-kafka-connector-image
     image: connect-custom:1.0.0
     hostname: connect
     container_name: connect
@@ -160,3 +179,6 @@ services:
 networks:
   proxynet:
     name: custom_network
+volumes:
+  pgdata:
+
